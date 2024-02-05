@@ -3,14 +3,16 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>DoViMuxer</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>preview</LangVersion>
+    <Nullable>enable</Nullable>
     <Version>1.1.1</Version>
     <Platforms>AnyCPU;x64</Platforms>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-	</ItemGroup>
+     <ItemGroup>
+        <PackageReference Include="NiL.JS" Version="2.5.1600" />
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+     </ItemGroup>
 </Project>
