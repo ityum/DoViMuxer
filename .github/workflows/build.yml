@@ -14,6 +14,12 @@ jobs:
         include:
 #          - os: windows-latest
 #            platform: win-x64
+#          - os: windows-latest
+#            platform: win-arm64
+#          - os: ubuntu-latest
+#            platform: linux-x64
+#          - os: ubuntu-latest
+#            platform: linux-arm64
 #          - os: macos-latest
 #            platform: osx-x64
           - os: macos-latest
@@ -22,7 +28,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     
     env:
-      Solution_Name: DoViMuxer.sln
       Project_Path: DoViMuxer/DoViMuxer.csproj
       
     steps:
@@ -41,20 +46,19 @@ jobs:
       run: |
         dotnet publish ${{ env.Project_Path }} \
           -c Release \
-          -r osx-arm64 \
+          -r ${{ matrix.platform }} \
           --self-contained true \
           -p:PublishSingleFile=true \
           -p:EnableCompressionInSingleFile=true \
-          -o ./publish/osx-arm64
+          -o ./publish/${{ matrix.platform }}
         
-    - name: 设置可执行权限 (仅 macOS)
-      if: runner.os == 'macOS'
-      run: |
-        chmod +x ./publish/${{ matrix.platform }}/DoViMuxer
-
+    - name: 设置可执行权限 (Unix)
+      if: runner.os != 'Windows'
+      run: chmod +x ./publish/${{ matrix.platform }}/DoViMuxer
+        
     - name: 上传构建产物
       uses: actions/upload-artifact@v4
       with:
         name: DoViMuxer-${{ matrix.platform }}
         path: ./publish/${{ matrix.platform }}/*
-        compression-level: 0  # 已经压缩过了，不需要再压缩
+        compression-level: 0
