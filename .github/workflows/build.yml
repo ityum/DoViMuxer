@@ -49,8 +49,7 @@ jobs:
         
     - name: 发布项目
       run: |
-        # 指定 UPX 工具路径
-        dotnet publish ${{ env.Project_Path }} -c Release -r ${{ matrix.platform }} --self-contained true -p:PublishAotCompressedToolPath=/usr/local/bin/upx -o ./publish/${{ matrix.platform }}
+        dotnet publish ${{ env.Project_Path }} -c Release -r ${{ matrix.platform }} --self-contained true -p:PublishAotCompressedToolPath=/usr/local/bin/upx -p:PublishAotCompressed=false -o ./publish/${{ matrix.platform }}
         
     - name: 设置可执行权限 (仅 macOS)
       if: runner.os == 'macOS'
