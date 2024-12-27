@@ -18,60 +18,40 @@ jobs:
 #            platform: osx-x64
           - os: macos-latest
             platform: osx-arm64
-
+            
     runs-on: ${{ matrix.os }}
-
+    
     env:
       Solution_Name: DoViMuxer.sln
       Project_Path: DoViMuxer/DoViMuxer.csproj
-
+      
     steps:
-      - name: 检出代码
-        uses: actions/checkout@v3
+    - name: 检出代码
+      uses: actions/checkout@v3
+      
+    - name: 设置 .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+        
+    - name: 还原依赖
+      run: dotnet restore ${{ env.Solution_Name }}
+      
+    - name: 构建项目
+      run: |
+        dotnet build ${{ env.Solution_Name }} -c Release --no-restore
+        
+    - name: 发布项目
+      run: |
+        dotnet publish ${{ env.Project_Path }} -c Release -r ${{ matrix.platform }} --self-contained true -p:PublishSingleFile=true -o ./publish/${{ matrix.platform }}
+        
+    - name: 设置可执行权限 (仅 macOS)
+      if: runner.os == 'macOS'
+      run: |
+        chmod +x ./publish/${{ matrix.platform }}/DoViMuxer
 
-      - name: 设置 .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 6.0.x
-
-      - name: 还原依赖
-        run: dotnet restore ${{ env.Solution_Name }}
-
-      - name: 构建项目
-        run: |
-          dotnet build ${{ env.Solution_Name }} -c Release --no-restore
-
-      - name: 发布项目
-        run: |
-          dotnet publish ${{ env.Project_Path }} -c Release -r ${{ matrix.platform }} --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -o ./publish/${{ matrix.platform }}
-
-      - name: 设置可执行权限 (仅 macOS)
-        if: runner.os == 'macOS'
-        run: |
-          chmod +x ./publish/${{ matrix.platform }}/DoViMuxer
-
-#      - name: 创建通用二进制文件 (Universal Binary)
-#        if: matrix.os == 'macos-latest' && matrix.platform == 'osx-arm64'
-#        run: |
-#          # 等待 x64 版本构建完成
-#          sleep 30
-#          mkdir -p ./publish/osx-universal
-#          lipo -create ./publish/osx-x64/DoViMuxer ./publish/osx-arm64/DoViMuxer -output ./publish/osx-universal/DoViMuxer
-#          chmod +x ./publish/osx-universal/DoViMuxer
-#          # 复制其他必要文件
-#          cp ./publish/osx-arm64/* ./publish/osx-universal/ 2>/dev/null || :
-#          rm ./publish/osx-universal/DoViMuxer.pdb || :
-
-      - name: 上传构建产物 (Windows & 单架构 macOS)
-        if: matrix.platform != 'osx-arm64'
-        uses: actions/upload-artifact@v3
-        with:
-          name: DoViMuxer-${{ matrix.platform }}
-          path: ./publish/${{ matrix.platform }}/*
-
-#      - name: 上传通用二进制文件 (Universal macOS)
-#        if: matrix.platform == 'osx-arm64'
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: DoViMuxer-osx-universal
-#          path: ./publish/osx-universal/*
+    - name: 上传构建产物
+      uses: actions/upload-artifact@v3
+      with:
+        name: DoViMuxer-${{ matrix.platform }}
+        path: ./publish/${{ matrix.platform }}/*

@@ -9,6 +9,8 @@
     <Nullable>enable</Nullable>
     <Version>1.1.1</Version>
     <Platforms>AnyCPU;x64</Platforms>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
   </PropertyGroup>
 
      <ItemGroup>
