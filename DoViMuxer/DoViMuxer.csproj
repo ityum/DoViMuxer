@@ -12,7 +12,12 @@
     <PublishAot>true</PublishAot>
     <SelfContained>true</SelfContained>
     <InvariantGlobalization>true</InvariantGlobalization>
-    <DebugType>embedded</DebugType>
+    <StripSymbols>true</StripSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OptimizationPreference>Speed</OptimizationPreference>
+    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
   </PropertyGroup>
 
   <ItemGroup>
