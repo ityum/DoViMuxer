@@ -43,7 +43,7 @@ jobs:
         
     - name: 发布项目
       run: |
-        dotnet publish ${{ env.Project_Path }} -c Release -r ${{ matrix.platform }} --self-contained true -p:PublishSingleFile=true -o ./publish/${{ matrix.platform }}
+        dotnet publish ${{ env.Project_Path }} -c Release -r ${{ matrix.platform }} --self-contained true -o ./publish/${{ matrix.platform }}
         
     - name: 设置可执行权限 (仅 macOS)
       if: runner.os == 'macOS'
