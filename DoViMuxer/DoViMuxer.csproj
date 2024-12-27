@@ -10,10 +10,7 @@
     <SelfContained>true</SelfContained>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     <DebugType>embedded</DebugType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OptimizationPreference>Speed</OptimizationPreference>
+    <TrimMode>partial</TrimMode>
   </PropertyGroup>
 
   <ItemGroup>
